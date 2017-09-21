@@ -1,0 +1,10 @@
+[bpi]
+
+192.168.1.106
+
+[bpi:vars]
+
+ansible_user = pi
+
+ansible_ssh_pass = bananapi
+ansible_sudo_pass = bananapi

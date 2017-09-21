@@ -1,0 +1,28 @@
+---
+
+- hosts: bpi
+  become: yes
+
+  tasks:
+    - name: install dependencies
+      apt: name=software-properties-common state=present
+
+    - name: install repo
+      apt_repository:
+        repo: 'ppa:team-xbmc/ppa'
+        state: present
+
+    - name: install aptitude (needed for update)
+      apt: name=aptitude state=present
+
+    - name: upgrade system
+      apt: update_cache=yes upgrade=safe
+
+    - name: install kodi
+      apt: name=kodi state=present 
+        
+    - name: prepare systemd service
+      copy: src=kodi.service dest=/etc/systemd/system/kodi.service
+    - name: enable kodi
+      systemd: name=kodi state=started enabled=yes daemon_reload=yes
+    
