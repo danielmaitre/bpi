@@ -1,10 +1,20 @@
+[bpi_initial]
+
+192.168.1.107
+
+[bpi_initial:vars]
+
+
+ansible_user = pi
+ansible_ssh_pass = bananapi
+ansible_sudo_pass = bananapi
+
+
 [bpi]
 
-192.168.1.106
+192.168.1.108
 
 [bpi:vars]
 
-ansible_user = pi
+ansible_user = daniel
 
-ansible_ssh_pass = bananapi
-ansible_sudo_pass = bananapi

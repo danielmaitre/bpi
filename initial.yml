@@ -1,0 +1,59 @@
+---
+
+- hosts: bpi_initial
+  become: yes
+
+  tasks:
+    #- name: install dependencies
+    #  apt: name=software-properties-common state=present
+
+    #- name: install repo
+    #  apt_repository:
+    #    repo: 'ppa:team-xbmc/ppa'
+    #    state: present
+
+    - name: install aptitude (needed for update)
+      apt: name=aptitude state=present
+
+    #- name: upgrade system
+    #  apt: update_cache=yes upgrade=safe
+
+    #- name: install kodi
+    #  apt: name=kodi state=present 
+        
+    #- name: prepare systemd service
+    #  copy: src=kodi.service dest=/etc/systemd/system/kodi.service
+    #- name: enable kodi
+    #  systemd: name=kodi state=started enabled=yes daemon_reload=yes
+
+    #- name: install wifi file
+    #  copy: src=wifi.cfg dest=/etc/wpa_supplicant/wpa_supplicant.conf
+
+    - name: install wifi file
+      copy: src=wifi.script dest=/tmp/wifiscript
+
+    - name: init script for wifi
+      command: nmcli connection edit con-name mywifi < /tmp/wifiscript && touch /etc/wifi.done
+      args:
+        creates: /etc/wifi.done
+      
+
+    - name: create user daniel
+      user:
+        name: daniel
+        password: $6$jP1cXF/j7M5i0wMA$BAuJG/0sAQEpqb5/6cLaeNgpeaJujJPaC94ZTJdHNbZ3bpWt1kKwW13pPgpXzx7aBp91gMubsvxPu26TXZtC31
+        groups: sudo
+        shell: /bin/bash
+
+    - name: create .ssh folder
+      file: path=/home/daniel/.ssh mode=0700 owner=daniel state=directory
+        
+    - name: copy public key to .ssh/authorised keys
+      copy: src=/home/daniel/.ssh/id_rsa_wpwd.pub dest=/home/daniel/.ssh/authorized_keys owner=daniel mode=0600
+
+
+    - name: set runlevel
+      command: systemctl enable multi-user.target
+
+    - name: make sure restart to command line
+      command: systemctl set-default multi-user.target

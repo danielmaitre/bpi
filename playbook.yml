@@ -4,25 +4,57 @@
   become: yes
 
   tasks:
-    - name: install dependencies
-      apt: name=software-properties-common state=present
 
-    - name: install repo
-      apt_repository:
-        repo: 'ppa:team-xbmc/ppa'
-        state: present
+    - name: remove user pi
+      user:
+        name: pi
+        state: absent
 
-    - name: install aptitude (needed for update)
-      apt: name=aptitude state=present
+    - name: remove shell from root user
+      user:
+        name: root
+        shell: /usr/sbin/nologin
 
-    - name: upgrade system
-      apt: update_cache=yes upgrade=safe
 
-    - name: install kodi
-      apt: name=kodi state=present 
+    - name: remove old docker packages
+      apt: "name={{item}} state=absent"
+      with_items:
+        - docker
+        - docker-engine
+        - docker.io
+
+    - name: install apt packages for https
+      apt: "name={{item}} state=present"
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+
+#    - name: download repo key
+#      command: curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /tmp/docker-key
+
+#    - name: add key
+#      command: apt-key add /tmp/docker-key
+
+#    - name: install repo
+#      command: add-apt-repository "deb [arch=armhf] https://download.docker.com/linux/ubuntu xenial stable"
+
+#    - name: install docker
+#      apt: update_cache=yes name=docker-ce state=present
+
+    - name: install minidvla
+      apt: name=minidlna state=present
+
+    - name: Mount up device by label
+      mount:
+        path: /backup/
+        src: /dev/sdb1
+        fstype: ext4
+        state: mounted
         
-    - name: prepare systemd service
-      copy: src=kodi.service dest=/etc/systemd/system/kodi.service
-    - name: enable kodi
-      systemd: name=kodi state=started enabled=yes daemon_reload=yes
-    
+    - name: copy minidnla config
+      copy: src=minidlna.conf dest=/etc/minidlna.conf
+
+    - name: setup systemd
+      systemd: name=minidlna state=started enabled=true
