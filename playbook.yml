@@ -58,3 +58,6 @@
 
     - name: setup systemd
       systemd: name=minidlna state=started enabled=true
+
+    - name: copy file to disable power management on wifi
+      copy: src=wifi-disable-power-management dest=/etc/network/if-up.d/
