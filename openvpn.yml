@@ -1,0 +1,13 @@
+---
+- hosts: bpidns
+  become: true
+  roles:
+    - { role: 'ansible-openvpn' ,
+	easy_rsa_req_country: "GB",
+	easy_rsa_req_province: "Durham",
+	easy_rsa_req_city: "Bowburn",
+	easy_rsa_req_org: "example",
+	easy_rsa_req_email: "admin@example.com",
+	easy_rsa_req_ou: "User",
+        openvpn_users : { "daniel" }
+      }

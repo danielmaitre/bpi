@@ -5,10 +5,15 @@
 
   tasks:
 
-    - name: remove user pi
+    - name: remove shell from pi user
       user:
         name: pi
-        state: absent
+        shell: /usr/sbin/nologin
+
+#    - name: remove user pi
+#      user:
+#        name: pi
+#        state: absent
 
     - name: remove shell from root user
       user:
@@ -16,20 +21,20 @@
         shell: /usr/sbin/nologin
 
 
-    - name: remove old docker packages
-      apt: "name={{item}} state=absent"
-      with_items:
-        - docker
-        - docker-engine
-        - docker.io
+#    - name: remove old docker packages
+#      apt: "name={{item}} state=absent"
+#      with_items:
+#        - docker
+#        - docker-engine
+#        - docker.io
 
-    - name: install apt packages for https
-      apt: "name={{item}} state=present"
-      with_items:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - software-properties-common
+#    - name: install apt packages for https
+#      apt: "name={{item}} state=present"
+#      with_items:
+#        - apt-transport-https
+#        - ca-certificates
+#        - curl
+#        - software-properties-common
 
 #    - name: download repo key
 #      command: curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /tmp/docker-key

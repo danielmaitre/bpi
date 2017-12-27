@@ -33,7 +33,7 @@
       copy: src=wifi.script dest=/tmp/wifiscript
 
     - name: init script for wifi
-      command: nmcli connection edit con-name mywifi < /tmp/wifiscript && touch /etc/wifi.done
+      shell: nmcli connection edit con-name mywifi < /tmp/wifiscript && touch /etc/wifi.done
       args:
         creates: /etc/wifi.done
       
