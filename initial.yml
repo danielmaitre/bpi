@@ -1,4 +1,5 @@
 ---
+# probably should run with -k option to enter password
 
 - hosts: bpi_initial
   become: yes
